@@ -1,32 +1,34 @@
-&lt;!doctype html>
-&lt;html lang="en">
-&lt;head>
-    &lt;meta charset="UTF-8">
-    &lt;title>Document&lt;/title>
-&lt;style>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+<style>
 label { display: block; }
-&lt;/style>
-&lt;/head>
-&lt;body>
+</style>
+<script src="//polyfill.io"></script>
+</head>
+<body>
 
-    &lt;label>1,00 &lt;input type="checkbox" name="ch[]" value="1,00" />&lt;/label>
-    &lt;label>2,00 &lt;input type="checkbox" name="ch[]" value="2,00" />&lt;/label>
-    &lt;label>3,00 &lt;input type="checkbox" name="ch[]" value="3,00" />&lt;/label>
-    &lt;label>4,00 &lt;input type="checkbox" name="ch[]" value="4,00" />&lt;/label>
-    &lt;label>5,00 &lt;input type="checkbox" name="ch[]" value="5,00" />&lt;/label>
-    &lt;label>6,00 &lt;input type="checkbox" name="ch[]" value="6,00" />&lt;/label>
-    &lt;label>7,00 &lt;input type="checkbox" name="ch[]" value="7,00" />&lt;/label>
-    &lt;label>8,00 &lt;input type="checkbox" name="ch[]" value="8,00" />&lt;/label>
-    &lt;label>9,00 &lt;input type="checkbox" name="ch[]" value="9,00" />&lt;/label>
-    &lt;label>10,00 &lt;input type="checkbox" name="ch[]" value="10,00" />&lt;/label>
+    <label>1,00 <input type="checkbox" name="ch[]" value="1,00" data-value="1,01" /></label>
+    <label>2,00 <input type="checkbox" name="ch[]" value="2,00" data-value="2,01" /></label>
+    <label>3,00 <input type="checkbox" name="ch[]" value="3,00" data-value="3,01" /></label>
+    <label>4,00 <input type="checkbox" name="ch[]" value="4,00" data-value="4,01" /></label>
+    <label>5,00 <input type="checkbox" name="ch[]" value="5,00" data-value="5,01" /></label>
+    <label>6,00 <input type="checkbox" name="ch[]" value="6,00" data-value="6,01" /></label>
+    <label>7,00 <input type="checkbox" name="ch[]" value="7,00" data-value="7,01" /></label>
+    <label>8,00 <input type="checkbox" name="ch[]" value="8,00" data-value="8,01" /></label>
+    <label>9,00 <input type="checkbox" name="ch[]" value="9,00" data-value="9,01" /></label>
+    <label>10,00 <input type="checkbox" name="ch[]" value="10,00" data-value="10,01" /></label>
 
-    &lt;label>Resultado &lt;input type="text" name="result" id="result" value="R$ 0,00" />&lt;/label>
+    <label>Resultado <input type="text" name="result" id="result" value="R$ 0,00" /></label>
 
-&lt;script>
-String.prototype.formatMoney = function() {
+<script>
+String.prototype.formatMoney = function () {
+    "use strict";
     var v = this;
 
-    if(v.indexOf('.') === -1) {
+    if (v.indexOf('.') === -1) {
         v = v.replace(/([\d]+)/, "$1,00");
     }
 
@@ -36,23 +38,29 @@ String.prototype.formatMoney = function() {
 
     return v;
 };
-String.prototype.toFloat = function() {
+
+String.prototype.toFloat = function () {
+    "use strict";
     var v = this;
 
-    if (!v) return 0;
-    return parseFloat(v.replace(/[\D]+/g, '' ).replace(/([\d]+)(\d{2})$/, "$1.$2"));
+    if (!v) {
+        return 0;
+    }
+    return parseFloat(v.replace(/[\D]+/g, "").replace(/([\d]+)(\d{2})$/, "$1.$2"));
 };
-(function(){
+
+(function (d) {
     "use strict";
 
-    var $chs = document.querySelectorAll('input[name="ch[]"]'),
-        $result = document.getElementById('result'),
+    var $chs     = d.querySelectorAll("input[name='ch[]']"),
+        $result  = d.getElementById("result"),
         chsArray = Array.prototype.slice.call($chs);
 
-    chsArray.forEach(function(element, index, array){
-        element.addEventListener("click", function(){
-            var v = this.value,
+    chsArray.forEach(function (element) {
+        element.addEventListener("click", function () {
+            var v      = this.getAttribute("data-value"),
                 result = 0;
+
             v = v.toFloat();
 
             if (this.checked === true) {
@@ -61,12 +69,12 @@ String.prototype.toFloat = function() {
                 result = $result.value.toFloat() - parseFloat(v);
             }
 
-            $result.value = "R$ " + String(result).formatMoney();
+            $result.value = "R$ " + String(result.toFixed(2)).formatMoney();
         });
     });
 
 
-}());
-&lt;/script>
-&lt;/body>
-&lt;/html>
+}(document));
+</script>
+</body>
+</html>
