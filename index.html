@@ -6,6 +6,7 @@
 <style>
 label { display: block; }
 </style>
+<script src="//polyfill.io"></script>
 </head>
 <body>
 
@@ -23,10 +24,11 @@ label { display: block; }
     <label>Resultado <input type="text" name="result" id="result" value="R$ 0,00" /></label>
 
 <script>
-String.prototype.formatMoney = function() {
+String.prototype.formatMoney = function () {
+    "use strict";
     var v = this;
 
-    if(v.indexOf('.') === -1) {
+    if (v.indexOf('.') === -1) {
         v = v.replace(/([\d]+)/, "$1,00");
     }
 
@@ -36,23 +38,29 @@ String.prototype.formatMoney = function() {
 
     return v;
 };
-String.prototype.toFloat = function() {
+
+String.prototype.toFloat = function () {
+    "use strict";
     var v = this;
 
-    if (!v) return 0;
-    return parseFloat(v.replace(/[\D]+/g, '' ).replace(/([\d]+)(\d{2})$/, "$1.$2"));
+    if (!v) {
+        return 0;
+    }
+    return parseFloat(v.replace(/[\D]+/g, "").replace(/([\d]+)(\d{2})$/, "$1.$2"));
 };
-(function(){
+
+(function (d) {
     "use strict";
 
-    var $chs = document.querySelectorAll('input[name="ch[]"]'),
-        $result = document.getElementById('result'),
+    var $chs     = d.querySelectorAll("input[name='ch[]']"),
+        $result  = d.getElementById("result"),
         chsArray = Array.prototype.slice.call($chs);
 
-    chsArray.forEach(function(element, index, array) {
-        element.addEventListener("click", function(){
-            var v = this.getAttribute('data-value'),
+    chsArray.forEach(function (element) {
+        element.addEventListener("click", function () {
+            var v      = this.getAttribute("data-value"),
                 result = 0;
+
             v = v.toFloat();
 
             if (this.checked === true) {
@@ -66,7 +74,7 @@ String.prototype.toFloat = function() {
     });
 
 
-}());
+}(document));
 </script>
 </body>
 </html>
